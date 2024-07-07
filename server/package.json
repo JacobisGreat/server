@@ -1,13 +1,21 @@
 {
-  "name": "my-callback-server",
+  "name": "my-express-server",
   "version": "1.0.0",
+  "description": "Express server to handle callbacks and communicate with Discord bot",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
     "body-parser": "^1.19.0",
-    "discord.js": "^14.0.0"
-  }
+    "dotenv": "^16.0.1",
+    "express": "^4.17.1",
+    "discord.js": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "author": "",
+  "license": "ISC"
 }
