@@ -1,7 +1,16 @@
+require('dotenv').config();  // Load environment variables from .env file
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const { Client, Intents } = require('discord.js');
+
+// Set up Discord bot client
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+const token = process.env.DISCORD_BOT_TOKEN; // Access the token from environment variables
+
+client.login(token);
 
 const app = express();
 const port = 3000;
@@ -24,7 +33,7 @@ const saveBalances = () => {
 app.use(bodyParser.json());
 
 // Callback endpoint
-app.post('/callback', (req, res) => {
+app.post('/callback', async (req, res) => {
   const { value, input_address, confirmations, data, currency } = req.body;
 
   // Log the received data for debugging
@@ -39,6 +48,14 @@ app.post('/callback', (req, res) => {
     saveBalances();
 
     console.log(`User ${userId} balance updated with amount ${value} ${currency}`);
+
+    // Notify the user via Discord
+    try {
+      const user = await client.users.fetch(userId);
+      user.send(`Your transaction of ${value} ${currency.toUpperCase()} has been confirmed and your balance has been updated.`);
+    } catch (error) {
+      console.error('Error sending Discord message:', error);
+    }
 
     // Respond with 'ok' to stop further callbacks
     res.status(200).send('ok');
