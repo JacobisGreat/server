@@ -23,10 +23,12 @@ app.post('/callback', (req, res) => {
   const { userId, amount, confirmed } = req.body;
 
   if (confirmed) {
-    if (!balances[userId]) balances[userId] = 0;
-    balances[userId] += amount;
+    if (!balances[userId]) balances[userId] = {};
+    if (!balances[userId].BTC) balances[userId].BTC = 0;
+    // Assume the amount is in BTC. Adjust this logic if supporting multiple currencies.
+    balances[userId].BTC += amount;
     saveBalances();
-    console.log(`User ${userId} balance updated with amount ${amount}`);
+    console.log(`User ${userId} balance updated with amount ${amount} BTC`);
   }
 
   res.status(200).send('Callback received');
